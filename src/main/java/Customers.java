@@ -2,10 +2,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Customers {
@@ -66,8 +63,23 @@ public class Customers {
         return "Customers{" +
                 "id=" + id +
                 ", fio='" + fio + '\'' +
-                ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customers)) return false;
+        Customers customers = (Customers) o;
+        return Objects.equals(id, customers.id) &&
+                Objects.equals(fio, customers.fio) &&
+                Objects.equals(password, customers.password) &&
+                Objects.equals(orders, customers.orders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fio, password, orders);
     }
 
     public static void addCustomerToDB(Customers customer,Session session){

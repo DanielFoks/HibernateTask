@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -74,5 +75,21 @@ public class Goods {
     public static List<Goods> goodsArrayList(Session session){
         Criteria criteriaGoods = session.createCriteria(Goods.class);
         return criteriaGoods.list();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Goods)) return false;
+        Goods goods = (Goods) o;
+        return Objects.equals(id, goods.id) &&
+                Objects.equals(price, goods.price) &&
+                Objects.equals(title, goods.title) &&
+                Objects.equals(orders, goods.orders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, price, orders);
     }
 }

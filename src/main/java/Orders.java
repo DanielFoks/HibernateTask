@@ -3,6 +3,7 @@ import org.hibernate.Session;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -72,5 +73,20 @@ public class Orders {
 
     public static void deleteOrderFromDB(Orders order,Session session){
         session.delete(order);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Orders)) return false;
+        Orders orders = (Orders) o;
+        return Objects.equals(id, orders.id) &&
+                Objects.equals(customer, orders.customer) &&
+                Objects.equals(goods, orders.goods);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, customer, goods);
     }
 }
