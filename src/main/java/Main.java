@@ -1,3 +1,10 @@
+import Entities.Customer;
+import Entities.Good;
+import Entities.OrderT;
+import Services.CustomerService;
+import Services.GoodService;
+import Services.OrderService;
+import Utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -15,14 +22,27 @@ public class Main {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-        try {
-            session.beginTransaction();
+        CustomerService customerService = new CustomerService();
+        GoodService goodService = new GoodService();
+        OrderService orderService = new OrderService();
+
 
             Console console = System.console();
 
             boolean back;
 
-        do {
+        List<Customer> customers = customerService.findAll();
+        List<Good> goods = goodService.findAll();
+
+        Set<Good> goodSet = new HashSet<>();
+        goodSet.add(goods.get(0));
+
+        OrderT orderT = new OrderT(customers.get(0),goodSet);
+
+        orderService.add(orderT);
+
+
+        /*do {
 
             back = false;
 
@@ -42,11 +62,11 @@ public class Main {
 
             if (chose==1){
                 do {
-                console.printf("1. Customers");
+                console.printf("1. Customer");
                     console.printf(fNEW_LINE);
-                console.printf("2. Goods");
+                console.printf("2. Good");
                     console.printf(fNEW_LINE);
-                console.printf("3. Orders");
+                console.printf("3. OrderT");
                     console.printf(fNEW_LINE);
                 console.printf("4. Back");
                     console.printf(fNEW_LINE);
@@ -54,13 +74,13 @@ public class Main {
                     console.printf(fNEW_LINE);
                 switch (table) {
                     case 1:
-                        editCustomers(session, console);
+                        editCustomers(console,customerService);
                             break;
                             case 2:
-                        editGoods(session,console);
+                        editGoods(console,goodService);
                                 break;
                             case 3:
-                        editOrders(session,console);
+                        editOrders(console,orderService);
                                 break;
                             default:
                         back=true;
@@ -71,21 +91,21 @@ public class Main {
 
             }else if (chose==2){
 
-                List<Customers> customers = Customers.customersArrayList(session);
+                List<Customer> customers = customerService.findAll();
                 int tmp = 1;
-                for (Customers customer : customers) {
+                for (Customer customer : customers) {
                     console.printf(tmp++ + ". " + customer.getFio());
                     console.printf(fNEW_LINE);
                 }
                 tmp = Integer.parseInt(console.readLine("Select your number:"));
                 console.printf(fNEW_LINE);
-                Customers customer = customers.get(tmp-1);
+                Customer customer = customers.get(tmp-1);
                 if (customer.checkPassword(console.readPassword("Enter password:"))){
                     console.printf(fNEW_LINE);
-                    List<Goods> goods = Goods.goodsArrayList(session);
-                    Set<Goods> goodsSet = new HashSet<>();
+                    List<Good> goods = goodService.findAll();
+                    Set<Good> goodsSet = new HashSet<>();
                     tmp=1;
-                    for (Goods good:goods){
+                    for (Good good:goods){
                         console.printf(tmp++ + ". " + good.getTitle()+" ("+good.getPrice()+")");
                         console.printf(fNEW_LINE);
                     }
@@ -103,8 +123,8 @@ public class Main {
                     }while (!back);
                     back = false;
 
-                    Orders orders = new Orders(customer,goodsSet);
-                    Orders.addOrderToDB(orders,session);
+                    OrderT orders = new OrderT(customer,goodsSet);
+                    orderService.add(orders);
                 }else {
                     console.printf("The password is incorrect");
                     console.printf(fNEW_LINE);
@@ -116,25 +136,22 @@ public class Main {
                 back=true;
 
             }
-}while (!back);
-            console.printf("GOODBYE!!!");
-            session.getTransaction().commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        }finally {
+}while (!back);*/
+
+
+            /*console.printf("GOODBYE!!!");*/
+
             session.close();
             sessionFactory.close();
-        }
     }
 
-    private static void editCustomers(Session session, Console console) {
+    private static void editCustomers(Console console,CustomerService customerService) {
         int tmp = 1;
         boolean back;
         do {
             back = false;
-            List<Customers> customers = Customers.customersArrayList(session);
-                for (Customers customer : customers) {
+            List<Customer> customers = customerService.findAll();
+                for (Customer customer : customers) {
                     console.printf(tmp++ + ". " + customer.getFio());
                     console.printf(fNEW_LINE);
                 }
@@ -148,17 +165,17 @@ public class Main {
             console.printf(fNEW_LINE);
 
             if (tmp == 1) {
-                Customers customer = new Customers();
+                Customer customer = new Customer();
                 customer.setFio(console.readLine("Enter full name: "));
                 console.printf(fNEW_LINE);
                 customer.setPassword(String.valueOf(console.readPassword("Enter password: ")));
                 console.printf(fNEW_LINE);
-                Customers.addCustomerToDB(customer, session);
+                customerService.add(customer);
             } else if (tmp == 2) {
                 tmp = Integer.parseInt(console.readLine("Select customer number:"));
                 console.printf(fNEW_LINE);
                 if (console.readLine("Delete? (Y/N):").toUpperCase().equals("Y")) {
-                    Customers.deleteCustomerFromDB(customers.get(tmp - 1), session);
+                    customerService.delete(customers.get(tmp - 1));
                     console.printf(fNEW_LINE);
                 } else if (console.readLine("Delete? (Y/N):").toUpperCase().equals("N")) {
                     back = true;
@@ -171,15 +188,15 @@ public class Main {
         }while (!back);
     }
 
-    private static void editGoods(Session session, Console console) {
+    private static void editGoods(Console console,GoodService goodService) {
 
         int tmp = 1;
         boolean back;
         do {
             back = false;
-            List<Goods> goodsList = Goods.goodsArrayList(session);
+            List<Good> goodList = goodService.findAll();
 
-            for (Goods good : goodsList) {
+            for (Good good : goodList) {
                 console.printf(tmp++ + ". " + good.getTitle());
             }
             console.printf("1. Add:");
@@ -192,18 +209,18 @@ public class Main {
             console.printf(fNEW_LINE);
 
             if (tmp == 1) {
-                Goods good = new Goods();
+                Good good = new Good();
                 good.setTitle(console.readLine("Enter title:"));
                 console.printf(fNEW_LINE);
                 good.setPrice(Integer.parseInt(console.readLine("Enter price:")));
                 console.printf(fNEW_LINE);
-                Goods.addGoodToDB(good,session);
+                goodService.add(good);
             } else if (tmp == 2) {
                 tmp = Integer.parseInt(console.readLine("Select good number:"));
                 console.printf(fNEW_LINE);
                 if (console.readLine("Delete? (Y/N):").toUpperCase().equals("Y")) {
                     console.printf(fNEW_LINE);
-                    Goods.deleteGoodFromDB(goodsList.get(tmp - 1), session);
+                    goodService.delete(goodList.get(tmp - 1));
                 } else if (console.readLine("Delete? (Y/N):").toUpperCase().equals("N")) {
                     back = true;
                     console.printf(fNEW_LINE);
@@ -215,18 +232,18 @@ public class Main {
         }while (!back);
     }
 
-    private static void editOrders(Session session, Console console) {
+    private static void editOrders(Console console, OrderService orderService) {
 
         int tmp = 1;
         boolean back;
         do {
             back = false;
 
-            List<Orders> ordersList = Orders.ordersArrayList(session);
+            List<OrderT> orderTList = orderService.findAll();
 
-            for (Orders order : ordersList) {
-                console.printf(tmp++ + ". " + order.getCustomer().getFio());
-                for (Goods good:order.getGoods()) {
+            for (OrderT orderT : orderTList) {
+                console.printf(tmp++ + ". " + orderT.getCustomer().getFio());
+                for (Good good: orderT.getGoods()) {
                     console.printf("- "+good.getTitle()+" ("+good.getPrice()+")");
                 }
             }
@@ -240,7 +257,7 @@ public class Main {
                 tmp = Integer.parseInt(console.readLine("Select order number:"));
                 console.printf(fNEW_LINE);
                 if (console.readLine("Delete? (Y/N):").toUpperCase().equals("Y")) {
-                    Orders.deleteOrderFromDB(ordersList.get(tmp - 1), session);
+                    orderService.delete(orderTList.get(tmp - 1));
                     console.printf(fNEW_LINE);
                 } else if (console.readLine("Delete? (Y/N):").toUpperCase().equals("N")) {
                     back = true;

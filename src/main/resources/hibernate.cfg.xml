@@ -13,9 +13,9 @@
         <property name="hbm2ddl.auto">update</property>
 
 
-        <mapping class="Customers" />
-        <mapping class="Goods" />
-        <mapping class="Orders" />
+        <mapping class="Entities.Customer" />
+        <mapping class="Entities.Good" />
+        <mapping class="Entities.OrderT" />
 
 
     </session-factory>
