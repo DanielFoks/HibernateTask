@@ -27,22 +27,11 @@ public class Main {
         OrderService orderService = new OrderService();
 
 
-            Console console = System.console();
+        Console console = System.console();
 
-            boolean back;
+        boolean back;
 
-        List<Customer> customers = customerService.findAll();
-        List<Good> goods = goodService.findAll();
-
-        Set<Good> goodSet = new HashSet<>();
-        goodSet.add(goods.get(0));
-
-        OrderT orderT = new OrderT(customers.get(0),goodSet);
-
-        orderService.add(orderT);
-
-
-        /*do {
+        do {
 
             back = false;
 
@@ -56,40 +45,40 @@ public class Main {
             int chose = 0;
             try {
                 chose = Integer.parseInt(console.readLine("You are:"));
-            }catch (NumberFormatException e){
-               e.printStackTrace();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
 
-            if (chose==1){
+            if (chose == 1) {
                 do {
-                console.printf("1. Customer");
+                    console.printf("1. Customer");
                     console.printf(fNEW_LINE);
-                console.printf("2. Good");
+                    console.printf("2. Good");
                     console.printf(fNEW_LINE);
-                console.printf("3. OrderT");
+                    console.printf("3. OrderT");
                     console.printf(fNEW_LINE);
-                console.printf("4. Back");
+                    console.printf("4. Back");
                     console.printf(fNEW_LINE);
-                int table = Integer.parseInt(console.readLine("Select the table to edit:"));
+                    int table = Integer.parseInt(console.readLine("Select the table to edit:"));
                     console.printf(fNEW_LINE);
-                switch (table) {
-                    case 1:
-                        editCustomers(console,customerService);
+                    switch (table) {
+                        case 1:
+                            editCustomers(console, customerService);
                             break;
-                            case 2:
-                        editGoods(console,goodService);
-                                break;
-                            case 3:
-                        editOrders(console,orderService);
-                                break;
-                            default:
-                        back=true;
-                                break;
-                        }
-                }while (!back);
+                        case 2:
+                            editGoods(console, goodService);
+                            break;
+                        case 3:
+                            editOrders(console, orderService);
+                            break;
+                        default:
+                            back = true;
+                            break;
+                    }
+                } while (!back);
                 back = false;
 
-            }else if (chose==2){
+            } else if (chose == 2) {
 
                 List<Customer> customers = customerService.findAll();
                 int tmp = 1;
@@ -99,69 +88,67 @@ public class Main {
                 }
                 tmp = Integer.parseInt(console.readLine("Select your number:"));
                 console.printf(fNEW_LINE);
-                Customer customer = customers.get(tmp-1);
-                if (customer.checkPassword(console.readPassword("Enter password:"))){
+                Customer customer = customers.get(tmp - 1);
+                if (customer.checkPassword(console.readPassword("Enter password:"))) {
                     console.printf(fNEW_LINE);
                     List<Good> goods = goodService.findAll();
                     Set<Good> goodsSet = new HashSet<>();
-                    tmp=1;
-                    for (Good good:goods){
-                        console.printf(tmp++ + ". " + good.getTitle()+" ("+good.getPrice()+")");
+                    tmp = 1;
+                    for (Good good : goods) {
+                        console.printf(tmp++ + ". " + good.getTitle() + " (" + good.getPrice() + ")");
                         console.printf(fNEW_LINE);
                     }
                     console.printf(fNEW_LINE);
                     console.printf("Select items for the order");
                     console.printf(fNEW_LINE);
-                    do{
-                     tmp = Integer.parseInt(console.readLine("Add goods(number):"));
+                    do {
+                        tmp = Integer.parseInt(console.readLine("Add goods(number):"));
                         console.printf(fNEW_LINE);
-                     goodsSet.add(goods.get(tmp-1));
-                        if (console.readLine("Done (Y/N): ").toUpperCase().equals("Y")){
+                        goodsSet.add(goods.get(tmp - 1));
+                        if (console.readLine("Done (Y/N): ").toUpperCase().equals("Y")) {
                             console.printf(fNEW_LINE);
                             back = true;
                         }
-                    }while (!back);
+                    } while (!back);
                     back = false;
 
-                    OrderT orders = new OrderT(customer,goodsSet);
+                    OrderT orders = new OrderT(customer, goodsSet);
                     orderService.add(orders);
-                }else {
+                } else {
                     console.printf("The password is incorrect");
                     console.printf(fNEW_LINE);
                     back = true;
                 }
-            }
-
-            else {
-                back=true;
+            } else {
+                back = true;
 
             }
-}while (!back);*/
+        } while (!back);
 
 
-            /*console.printf("GOODBYE!!!");*/
+        console.printf("GOODBYE!!!");
 
-            session.close();
-            sessionFactory.close();
+        session.close();
+        sessionFactory.close();
     }
 
-    private static void editCustomers(Console console,CustomerService customerService) {
+    private static void editCustomers(Console console, CustomerService customerService) {
         int tmp = 1;
         boolean back;
         do {
             back = false;
             List<Customer> customers = customerService.findAll();
-                for (Customer customer : customers) {
-                    console.printf(tmp++ + ". " + customer.getFio());
-                    console.printf(fNEW_LINE);
-                }
-                console.printf("1. Add:");
+            for (Customer customer : customers) {
+                console.printf(tmp++ + ". " + customer.getFio());
+                console.printf(fNEW_LINE);
+            }
+            console.printf("1. Add:");
             console.printf(fNEW_LINE);
-                console.printf("2. Select customer");
+            console.printf("2. Select customer");
             console.printf(fNEW_LINE);
-                console.printf("3. Back");
+            console.printf("3. Back");
             console.printf(fNEW_LINE);
-                tmp = Integer.parseInt(console.readLine("Select action:"));
+            tmp = Integer.parseInt(console.readLine("Select action:"));
             console.printf(fNEW_LINE);
 
             if (tmp == 1) {
@@ -185,10 +172,10 @@ public class Main {
                 back = true;
                 console.printf(fNEW_LINE);
             }
-        }while (!back);
+        } while (!back);
     }
 
-    private static void editGoods(Console console,GoodService goodService) {
+    private static void editGoods(Console console, GoodService goodService) {
 
         int tmp = 1;
         boolean back;
@@ -229,7 +216,7 @@ public class Main {
                 back = true;
                 console.printf(fNEW_LINE);
             }
-        }while (!back);
+        } while (!back);
     }
 
     private static void editOrders(Console console, OrderService orderService) {
@@ -243,8 +230,8 @@ public class Main {
 
             for (OrderT orderT : orderTList) {
                 console.printf(tmp++ + ". " + orderT.getCustomer().getFio());
-                for (Good good: orderT.getGoods()) {
-                    console.printf("- "+good.getTitle()+" ("+good.getPrice()+")");
+                for (Good good : orderT.getGoods()) {
+                    console.printf("- " + good.getTitle() + " (" + good.getPrice() + ")");
                 }
             }
             console.printf("1. Select good:");
@@ -266,6 +253,6 @@ public class Main {
             } else if (tmp == 2) {
                 back = true;
             }
-        }while (!back);
+        } while (!back);
     }
 }
