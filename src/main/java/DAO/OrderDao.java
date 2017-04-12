@@ -18,7 +18,8 @@ public class OrderDao implements OrderDaoInterface<OrderT> {
 
     private Transaction currentTransaction;
 
-    public OrderDao(){}
+    public OrderDao() {
+    }
 
     public Session openCurrentSession() {
         currentSession = HibernateUtil.getSessionFactory().openSession();
@@ -40,6 +41,12 @@ public class OrderDao implements OrderDaoInterface<OrderT> {
         currentSession.close();
     }
 
+    public void closeCurrentSessionWithRollbackTransaction() {
+        currentTransaction.rollback();
+        currentSession.close();
+    }
+
+
     public Session getCurrentSession() {
         return currentSession;
     }
@@ -54,7 +61,7 @@ public class OrderDao implements OrderDaoInterface<OrderT> {
 
     public void setCurrentTransaction(Transaction currentTransaction) {
 
-}
+    }
 
     @Override
     public void add(OrderT entity) {

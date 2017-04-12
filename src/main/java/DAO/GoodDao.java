@@ -16,7 +16,7 @@ public class GoodDao implements GoodDaoInterface<Good> {
 
     private Transaction currentTransaction;
 
-    public GoodDao(){
+    public GoodDao() {
 
     }
 
@@ -56,6 +56,11 @@ public class GoodDao implements GoodDaoInterface<Good> {
         this.currentTransaction = currentTransaction;
     }
 
+    public void closeCurrentSessionWithRollbackTransaction() {
+        currentTransaction.rollback();
+        currentSession.close();
+    }
+
 
     @Override
     public void add(Good entity) {
@@ -64,7 +69,7 @@ public class GoodDao implements GoodDaoInterface<Good> {
 
     @Override
     public void delete(Good entity) {
-getCurrentSession().delete(entity);
+        getCurrentSession().delete(entity);
     }
 
     @Override

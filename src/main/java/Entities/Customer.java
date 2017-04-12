@@ -19,8 +19,8 @@ public class Customer {
     private Set<OrderT> orderTs;
 
 
-
-    public Customer(){}
+    public Customer() {
+    }
 
     public int getId() {
         return id;
@@ -50,11 +50,14 @@ public class Customer {
         this.orderTs = orderTs;
     }
 
-    public boolean checkPassword(char[] password){
-        if (String.valueOf(password).equals(this.password)){
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean checkPassword(char[] password) {
+        if (String.valueOf(password).equals(this.password)) {
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
 

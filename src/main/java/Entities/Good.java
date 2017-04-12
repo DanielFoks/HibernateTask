@@ -16,7 +16,7 @@ public class Good {
 
     private int price;
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "goods")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "goods")
     private Set<OrderT> orderTs;
 
     public int getId() {

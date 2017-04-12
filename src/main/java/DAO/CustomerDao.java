@@ -35,6 +35,11 @@ public class CustomerDao implements CustomerDaoInterface<Customer>{
         currentSession.close();
     }
 
+    public void closeCurrentSessionWithRollbackTransaction() {
+        currentTransaction.rollback();
+        currentSession.close();
+    }
+
     public void closeCurrentSessionWithTransaction() {
         currentTransaction.commit();
         currentSession.close();

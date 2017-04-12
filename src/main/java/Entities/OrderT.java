@@ -19,10 +19,11 @@ public class OrderT {
 
 
     @ManyToMany
-    @JoinTable(name="orders_goods")
+    @JoinTable(name = "orders_goods")
     private Set<Good> goods;
 
-    public OrderT(){}
+    public OrderT() {
+    }
 
     public OrderT(Customer customer, Set<Good> goods) {
         this.customer = customer;
